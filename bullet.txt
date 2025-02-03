@@ -1,0 +1,35 @@
+class Bullet {
+    constructor() {
+        this.obj = document.createElement("a-entity");
+        this.obj.setAttribute("gltf-model", "#bullet");
+        this.obj.setAttribute("scale", "0.01 0.01 0.01");
+        this.obj.setAttribute("rotation", "0 0 0");
+        this.obj.setAttribute("visible", "false");
+        scene.appendChild(this.obj);
+
+        this.fire = false;
+        this.speed = 5; // Set the speed of the bullet
+    }
+
+    move() {
+        if (this.fire) {
+            this.x += this.dx;
+            this.z += this.dz;
+            this.obj.setAttribute("position", { x: this.x, y: this.y, z: this.z });
+        } else {
+            this.obj.setAttribute("visible", "false");
+        }
+    }
+
+    shoot() {
+        this.fire = true;
+        this.obj.setAttribute("visible", "true");
+        this.x = camera.object3D.position.x;
+        this.y = camera.object3D.position.y;
+        this.z = camera.object3D.position.z;
+
+        let angle = camera.object3D.rotation.y + Math.PI;
+        this.dx = Math.sin(angle) * this.speed;
+        this.dz = Math.cos(angle) * this.speed;
+    }
+}

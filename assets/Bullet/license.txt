@@ -1,0 +1,11 @@
+Model Information:
+* title:	7.62 MM Bullet
+* source:	https://sketchfab.com/3d-models/762-mm-bullet-50728532d8cf489d9d02deeffb19ea31
+* author:	mucahitkutukde (https://sketchfab.com/mucahitkutukde)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "7.62 MM Bullet" (https://sketchfab.com/3d-models/762-mm-bullet-50728532d8cf489d9d02deeffb19ea31) by mucahitkutukde (https://sketchfab.com/mucahitkutukde) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
