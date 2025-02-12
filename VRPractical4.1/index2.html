@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-	    <script src="script.js"></script>
+	   <script src="script.js"></script>
 	    <script src="food.js"></script>
 	    <script src="water.js"></script>
 	    <script src="ammo.js"></script>
@@ -11,6 +11,7 @@
 	    <script src="light.js"></script>
 	    <script src="health.js"></script>
 	    <script src="pine.js"></script>
+	    <script src="rock.js"></script>
  <script src="https://cdn.jsdelivr.net/gh/c-frame/aframe-physics-system@v4.2.2/dist/aframe-physics-system.min.js"></script>
 
   </head>
@@ -20,13 +21,14 @@
 		    	  <!-- http://localhost:1751?r=2224 -->
       <a-plane position="0 -0.5 0" rotation="-90 0 0" width="250" height="250" static-body color="#7BC8A4"></a-plane>
       <a-assets>
-		<a-image id="missionComplete" scale="3 1 1" src="MissionComplete.png" opacity="0" position="0 1 -2"></a-image>
+		<a-image id="missionComplete" scale="3 1 1" src="VRPractical4.1/MissionComplete.png" opacity="0" position="0 1 -2"></a-image>
         <audio id="item" src="item-equip-6904.mp3" preload="auto"></audio>		
 		<a-asset-item id="ammoC" src="ammo_box/scene.gltf"></a-asset-item>
 		<a-asset-item id="food" src="chicken/scene.gltf"></a-asset-item>
 		<a-asset-item id="health" src="health_kit/scene.gltf"></a-asset-item>
 		<a-asset-item id="light" src="scifi_light_11/scene.gltf"></a-asset-item>
 		<a-asset-item id="water" src="water_bottle_low_poly/scene.gltf"></a-asset-item>
+		<a-asset-item id="rock" src="stylized_rocks/scene.gltf"></a-asset-item>
 	  
 	  </a-assets>
 	  <a-light type="ambient" intensity=".3"></a-light>
@@ -70,7 +72,7 @@
 	  	<a-text id="Quest2" position="3.5 3.00 -4" value="Quest #2: " color="white"></a-text>
 	  	<a-text id="Quest3" position="3.5 2.75 -4" value="Quest #3: " color="white"></a-text>
 	  	<a-text id="Quest4" position="3.5 2.50 -4" value="Quest #4: " color="white"></a-text>
-
+		<a-image position="3.5 2.50 -4" id="mission_Complete" width="3" src="VRPractical4.1/MissionComplete.png"></a-image>
 	  </a-camera>
     </a-scene>
   </body>
