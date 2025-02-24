@@ -1,0 +1,8 @@
+Model Information:
+* title:	Building
+* source:	https://sketchfab.com/3d-models/building-3bac35744c344c00b63d681c58fa27f1
+* author:	Mateusz Woliński (https://sketchfab.com/jeandiz)
+
+Model License:
+* license type:	SKETCHFAB Standard (https://sketchfab.com/licenses)
+* requirements:	Under basic restrictions, use worldwide, on all types of media, commercially or not, and in all types of derivative works

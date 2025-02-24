@@ -58,20 +58,10 @@
             <button id="startButton" onclick="showModes()">Start Game</button>
         </div>
         <div id="modeButtons" class="mode-buttons">
-            <button onclick="startMode('testing')">Survive</button>
-            <button onclick="startMode('tests')">Explore</button>
-            <button onclick="startMode('VRPractical4.1/index2')">Endless</button>
+            <button src="testing.html">Survive</button>
+            <button src="tests.html">>Explore</button>
+           
         </div>
     </div>
-    <script>
-        function showModes() {
-            document.querySelector('.start-button').style.display = 'none';
-            document.getElementById('modeButtons').style.display = 'flex';
-        }
-
-        function startMode(mode) {
-            window.location.href = mode + ".html";
-        }
-    </script>
 </body>
 </html>

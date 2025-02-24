@@ -1,13 +1,13 @@
 // Function to generate a random number between l (lower bound) and u (upper bound)
 let rnd = (l, u) => Math.random() * (u - l) + l;
-let foods = [], healths = [], ammos = [], waters = []; trees = []; rocks = [];
+let foods = [], heals = [], ammos = [], waters = []; trees = []; rocks = [];
 let food_collected = 0, ammo_collected = 0, health_collected = 0, water_collected = 0;
 
-let scene, tmp;
+let scene;
 window.onload = function(){
   scene = document.querySelector("a-scene");
   camera = document.querySelector("a-camera");
-  item = document.getElementById("item");
+
   q1 = document.getElementById("Quest1");
   q2 = document.getElementById("Quest2");
   q3 = document.getElementById("Quest3");
@@ -35,7 +35,7 @@ window.onload = function(){
   for(let i = 0; i < 10; i++){
     let x = rnd(-100,100);
     let z = rnd(-100,100);
-    healths.push(new health(x,0,z));
+    heals.push(new health(x,0,z));
   }
 	for(let i = 0;i < 50; i++){
     let x = rnd(-100,-10);
@@ -75,10 +75,10 @@ function loop(){
 		  q1.setAttribute("value", `Quest #1: ${food_collected} / 50 food collected`);
 		}
 	}
-	for(let health of healths){
-		health.spin();
-		if (distance(camera, health.obj) < 3 && health.available) {
-		  health.collect();
+	for(let heal of heals){
+		heal.spin();
+		if (distance(camera, heal.obj) < 3 && heal.available) {
+		  heal.collect();
 		  q4.setAttribute("value", `Quest #4: ${health_collected} / 5 health collected`);
 		}
 

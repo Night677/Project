@@ -29,6 +29,7 @@ class water{
   collect(){
 	  this.available = false;
 	        water_collected += 1;
+			
 		this.obj.remove();
   }
 }
