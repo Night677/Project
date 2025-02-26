@@ -6,29 +6,29 @@ class Animatronic {
         this.obj.setAttribute("position", `${x} ${y} ${z}`);
         document.querySelector('a-scene').appendChild(this.obj);
 
-        // Initialize the angle and speed
+      
         this.angle = 0;
         this.damage = 10; 
         this.health = 30;
         this.model = {
             die: "FallingBack",
-            speed: .1, // Increase the speed as needed
-            walk: "Run_InPlace", // Replace with the actual walking animation clip name
-            idle: "Idle", // Replace with the actual idle animation clip name
-            attack: "Attack" // Replace with the actual attack animation clip name
+            speed: .1, 
+            walk: "Run_InPlace",
+            idle: "Idle",
+            attack: "Attack" 
         };
 
-        // Bind the chase method to the current instance
+        
         this.chase = this.chase.bind(this);
 
-        // Initialize the last attack time
+        
         this.lastAttackTime = 0;
-        this.attackCooldown = 2000; // 2 seconds cooldown between attacks
+        this.attackCooldown = 2000;
 
-        // Listen for the model to load
+        
         this.obj.addEventListener('model-loaded', () => {
-            // Call the chase method at regular intervals to make the zombie chase the camera
-            this.chaseInterval = setInterval(this.chase, 100); // Adjust the interval as needed
+            
+            this.chaseInterval = setInterval(this.chase, 100);
         });
     }
 
@@ -36,8 +36,8 @@ class Animatronic {
         let dx = that.object3D.position.x - this.obj.object3D.position.x;
         let dz = that.object3D.position.z - this.obj.object3D.position.z;
 
-        this.angle = Math.atan2(dx, dz); // Use atan2 for correct angle calculation
-        this.obj.object3D.rotation.y = this.angle; // Update the zombie's rotation
+        this.angle = Math.atan2(dx, dz); 
+        this.obj.object3D.rotation.y = this.angle; 
     }
 
     forward() {
@@ -46,7 +46,7 @@ class Animatronic {
         this.obj.object3D.position.x += dx;
         this.obj.object3D.position.z += dz;
 
-        // Sync the new position with the A-Frame position attribute
+       
         const pos = this.obj.object3D.position;
         this.obj.setAttribute("position", `${pos.x} ${pos.y} ${pos.z}`);
 
@@ -54,7 +54,7 @@ class Animatronic {
     }
 
     stop() {
-        // Stop the zombie's movement
+       
         this.obj.setAttribute("animation-mixer", { clip: this.model.idle, timeScale: 1 });
     }
 
@@ -63,7 +63,7 @@ class Animatronic {
         if (currentTime - this.lastAttackTime > this.attackCooldown) {
             console.log("Zombie is attacking!");
             if (this.obj.getAttribute("visible") !== "false" && this.health > 0) {
-                // Reduce camera health
+              
                 console.log("Camera health reduced!");
                 this.obj.setAttribute("animation-mixer", { clip: this.model.attack, timeScale: 1 });
             }
@@ -100,22 +100,22 @@ class Animatronic {
 
     die() {
         console.log("Zombie has died!");
-        clearInterval(this.chaseInterval); // Stop the chase interval
+        clearInterval(this.chaseInterval);
         this.model = {
             die: "FallingBack",
-            speed: .0, // Increase the speed as needed
-            walk: "FallingBack", // Replace with the actual walking animation clip name
-            idle: "Idle", // Replace with the actual idle animation clip name
-            attack: "Attack" // Replace with the actual attack animation clip name
+            speed: .0,
+            walk: "FallingBack", 
+            idle: "Idle",
+            attack: "Attack" 
         };
-        // Remove the zombie from the scene after the death animation
+       
         setTimeout(() => {
             this.obj.setAttribute("visible", "false");
             setTimeout(() => {
                 if (this.obj.parentNode) {
                     this.obj.parentNode.removeChild(this.obj);
                 }
-            }, 500); // Additional delay to ensure visibility change
-        }, 1000); // Adjust the timeout to match the length of the death animation
+            }, 500); 
+        }, 1000); 
     }
 }
