@@ -22,7 +22,7 @@ h2 {
     justify-content: center;
 }
 body {
-    background-image: url('VRPractical4.1/thumbnail.png');
-    background-size: cover; /* Ensures the image covers the entire background */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
+    background-image: url('image/Screenshot 2025-02-25 093148.png');
+    background-size: cover; 
+    background-repeat: no-repeat;
 }

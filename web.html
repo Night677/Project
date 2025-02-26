@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zombie Shooter</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        .start-button, .mode-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        a {
+            display: inline-block;
+            width: 40%; /* Make the buttons take up 40% of the page width each */
+            padding: 450px 0; /* Increased padding for larger height */
+            font-size: 3em; /* Increased font size */
+            cursor: pointer;
+            background-color: #ff0000;
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            margin: 30px; /* Adjust margin for more spacing */
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        a:hover {
+            background-color: #cc0000;
+            transform: scale(1.05);
+        }
+        a:active {
+            background-color: #990000;
+            transform: scale(0.95);
+        }
+        .mode-buttons {
+            flex-direction: row; /* Change to row to place buttons side by side */
+        }
+        .survive-button {
+            background-image: url('image/Survive.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+        }
+        .endless-button {
+            background-image: url('image/wave.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="modeButtons" class="mode-buttons">
+            <a href="testing.html" class="survive-button">Survive</a>
+            <a href="tests.html" class="endless-button">Endless</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -7,11 +7,12 @@ class rock {
       this.available = true;
 
       this.obj = document.createElement("a-entity");
-      this.obj.setAttribute("gltf-model", "#rock");
+      this.obj.setAttribute("gltf-model", "#bush");
+      this.obj.setAttribute("meterial","fog: false")
       this.obj.setAttribute("position", { x: x, y: y, z: z });
-      this.obj.setAttribute("scale", `${rnd(.4, .6)} ${rnd(.2, .4)} ${rnd(.4, .6)}`); // Corrected this line
+      this.obj.setAttribute("scale", `${rnd(3, 4)} ${rnd(3, 4)} ${rnd(3, 4)}`); 
 
-      const scene = document.querySelector('a-scene'); // Added this line
+      
       scene.append(this.obj);
   }
 }

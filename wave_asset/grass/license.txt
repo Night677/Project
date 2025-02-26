@@ -1,0 +1,11 @@
+Model Information:
+* title:	Green Field (Greener)
+* source:	https://sketchfab.com/3d-models/green-field-greener-8399c00672134b828ca6cf2363a95085
+* author:	Somersby (https://sketchfab.com/Somersby)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Green Field (Greener)" (https://sketchfab.com/3d-models/green-field-greener-8399c00672134b828ca6cf2363a95085) by Somersby (https://sketchfab.com/Somersby) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)

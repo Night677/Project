@@ -4,21 +4,13 @@ class tree{
     this.y = y;
     this.z = y;
 
-    this.obj = document.createElement("a-cone");
-    this.obj.setAttribute("color","green");
-    this.obj.setAttribute("height",5);
-    this.obj.setAttribute("static-body","");
-	this.obj.setAttribute("uniqueID","tr");
-    this.obj.setAttribute("position",{x:x,y:y+3,z:z});
-    scene.append(this.obj);
-	this.objt = document.createElement("a-cylinder");
-    this.objt.setAttribute("color","brown");
-    this.objt.setAttribute("radius",.5);
-    this.objt.setAttribute("height",2);
-    this.objt.setAttribute("static-body","");
-	this.obj.setAttribute("uniqueID","ee");
+    this.obj = document.createElement("a-entity");
+      this.obj.setAttribute("gltf-model", "#tree");
+      this.obj.setAttribute("meterial","fog: false")
+      this.obj.setAttribute("position", { x: x, y: y-1, z: z });
+      this.obj.setAttribute("scale", `${rnd(1, 1.5)} ${rnd(1, 2)} ${rnd(1, 1.5)}`); 
 
-    this.objt.setAttribute("position",{x:x,y:y,z:z});
-    scene.append(this.objt);
+     
+      scene.append(this.obj);
   }
 }

@@ -4,41 +4,97 @@
   <title>Zombie Apocalypse World</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="zombie.js"></script>
   <script src="script.js"></script>
-  <script src="kinema.js"></script>
+  <script src="zombie.js"></script>
+  <script src="fastzombie.js"></script>
   <script src="bullet.js"></script>
+
+  <script src="VRPractical4.1/food.js"></script>
+  <script src="VRPractical4.1/water.js"></script>
+  <script src="VRPractical4.1/ammo.js"></script>
+  <script src="VRPractical4.1/tree.js"></script>
+  <script src="VRPractical4.1/light.js"></script>
+  <script src="VRPractical4.1/health.js"></script>
+  <script src="VRPractical4.1/rock.js"></script>
 </head>
 <body>
-  <a-scene stats >
+  
+  <a-scene stats fog="type: exponential; color: #AAA; density: 0.04">
     <a-assets>
       <a-asset-item id="zombie" src="assets/zombie/scene.gltf"></a-asset-item>
       <a-asset-item id="Bosszombie" src="assets/boss/scene.gltf"></a-asset-item>
       <a-asset-item id="gun" src="assets/ak47/scene.gltf"></a-asset-item>
       <a-asset-item id="bullet" src="assets/Bullet/scene.gltf"></a-asset-item>
+      <a-asset-item id="fast" src="assets/zombiefast/scene.gltf"></a-asset-item>
+      <a-asset-item id="bush" src="assets/bush/scene.gltf"></a-asset-item>
+      <a-asset-item id="tree" src="assets/trees/scene.gltf"></a-asset-item>
+      <a-asset-item id="Tv" src="assets/TV/scene.gltf"></a-asset-item>
+      <a-asset-item id="cabin" src="assets/Cabin/scene.gltf"></a-asset-item>
+
+      <a-image id="done" scale="3 1 1" src="VRPractical4.1/MissionComplete.png" opacity="0" position="0 1 -2"></a-image>
+      
+      <a-asset-item id="ammoC" src="VRPractical4.1/ammo_box/scene.gltf"></a-asset-item>
+      <a-asset-item id="food" src="VRPractical4.1/chicken/scene.gltf"></a-asset-item>
+      <a-asset-item id="health" src="VRPractical4.1/health_kit/scene.gltf"></a-asset-item>
+      <a-asset-item id="light" src="VRPractical4.1/scifi_light_11/scene.gltf"></a-asset-item>
+      <a-asset-item id="water" src="VRPractical4.1/water_bottle_low_poly/scene.gltf"></a-asset-item>
+      <a-asset-item id="rock" src="VRPractical4.1/stylized_rocks/scene.gltf"></a-asset-item>
       <img id="crosshair" src="image/crosshair.png" />
+      <img id="floor" src="image/forest_texture.jpg" />
     </a-assets>
-
-   <a-plane  position="0 0 0" rotation="-90 0 0" width="100" height="100" color="#7BC8A4"></a-plane>
-  
-    <a-sky color="#2B2B2B"></a-sky>
-
-    <a-light type="ambient" color="#999"></a-light>
-    <a-light type="directional" position="50 100 50" intensity="0.8"></a-light>
-   
-    <a-box position="10 5 10"  scale="10 10 10" color="#FF0000"></a-box>
-   
+  <a-entity gltf-model="#cabin" position="-3 -.5 0" scale=".35 .35 .35"></a-entity>
+  <a-entity gltf-model="#Tv" position="4.1 1.5 -1.3" scale="15 15 15" rotation="0 -65 0"></a-entity>
+    <!--House start-->
+    <!--<a-entity id="house" scale="2 1.5 2">
+      <a-entity scale="4 1 4">
+        <a-box position="-1.5 -1 0" depth=".15" height="3.5" width="1.5" color="gray"></a-box>
+        <a-box position="1.41 -1 0" depth=".15" height="3.5" width="1.325" color="gray"></a-box>
+        <a-box position="-2.175 -1 -2" depth=".15" height="3.5" width="4" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="2 -1 -2" depth=".15" height="3.5" width="4" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="2 0 0" depth=".15" height="4" width=".15" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="2 0 -4" depth=".15" height="4" width=".15" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="-2.174 0 0" depth=".15" height="4" width=".15" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="-2.174 0 -4" depth=".15" height="4" width=".15" color="gray" rotation="0 90 0"></a-box>
+        <a-box position="-0.07482 -1 -4" depth=".15" height="3.5" width="4.24" color="gray"></a-box>
+        <a-box position="0 1.75 -2" depth=".5" height="4.5" width="4.5" color="gray" rotation="90 0 0"></a-box>
+      </a-entity>
+      <a-box position="0 -.5 15" depth=".5" height="30" width="1.75" color="brown" rotation="90 0 0"></a-box>
+    </a-entity>-->
     
+    <!--House End-->
+   
+<a-plane src="#floor" repeat="150 150" position="0 -0.5 0" rotation="-90 0 0" width="400" height="400" static-body color="#7BC8A4"></a-plane>
+    
+    <a-sky color="#1a1a1a"></a-sky>
+    <a-light type="ambient" color="#555" intensity="0.5"></a-light>
+    <a-light type="directional" position="50 100 50" intensity="0.5" color="#555"></a-light>
 
-    <a-entity id="player" >
-      <a-camera look-controls="pointerLockEnabled: true">
-        <a-entity id="gun1" gltf-model="#gun" scale="0.002 0.002 0.002" position="1 -0.45 -1" animation-mixer="clip: Armature.003|idle"></a-entity>
+    <a-entity id="player" acceleration="1">
+      <a-camera look-controls="pointerLockEnabled: true;" wasd-controls="acceleration: 25">
+        <a-entity id="gun1" gltf-model="#gun" scale="0.002 0.002 0.002" position="0 -0.5 -1" animation-mixer="clip: Armature.003|idle"></a-entity>
+        <a-text id="Quest1" position="3.5 3.25 -4" value="Quest #1: " color="white"></a-text>
+        <a-text id="Quest2" position="3.5 3.00 -4" value="Quest #2: " color="white"></a-text>
+        <a-text id="Quest3" position="3.5 2.75 -4" value="Quest #3: " color="white"></a-text>
+        <a-text id="Quest4" position="3.5 2.50 -4" value="Quest #4: " color="white"></a-text>
+        <a-image position="3.5 2.50 -4" id="mission_Complete" width="3" src="VRPractical4.1/MissionComplete.png" opacity="0"></a-image>
         <a-cursor material="src: #crosshair" scale="3 3 3" position="0 0 -1"></a-cursor>
       </a-camera>
     </a-entity>
-    
   </a-scene>
+  <script>
+   function sceneLoaded() {
+      setTimeout(() => {
+        alert("Welcome to the Zombie Shooter! \n\nObjective: \nSurvive the zombie apocalypse by completing the quests given to you. Complete the quest by collecting certain amount of each item. \nAlso Please give the world a second to load \n\nControls: \nWASD - Move \nShift - Sprint \nMouse - Look around \nLeft Click - Shoot \n Shift - Sprinting \n\nGood Luck!");
+      }, 1000);
+    }
+
+    document.querySelector('a-scene').addEventListener('loaded', sceneLoaded);
+  </script>
+  <div id="player-info" style="position: absolute; top: 60px; left: 10%; transform: translateX(-50%); color: white; font-size: 50px; text-align: center;">
+    Health: 100<br>
+    Bullets: 20
+  </div>
 </body>
 </html>

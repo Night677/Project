@@ -1,4 +1,4 @@
-class health{
+class heal{
   constructor(x,y,z){
 	this.a = 0;
 	this.da = .01;

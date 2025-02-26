@@ -1,0 +1,84 @@
+function checkZombieCollisions() {
+    for (let i = animatronics.length - 1; i >= 0; i--) {
+        let zombie = animatronics[i];
+        if (distance(camera, zombie.obj) < 3) { // Adjust the distance threshold as needed
+            console.log("Zombie collided with player! Taking damage.");
+            takeDamage(10); // Adjust the damage amount as needed
+        }
+    }
+    for (let i = fastzombies.length - 1; i >= 0; i--) {
+        let fastzombie = fastzombies[i];
+        if (distance(camera, fastzombie.obj) < 3) { // Adjust the distance threshold as needed
+            console.log("Fast zombie collided with player! Taking damage.");
+            takeDamage(10); // Adjust the damage amount as needed
+        }
+    }
+}
+
+function loop() {
+    for (let i = fastzombies.length - 1; i >= 0; i--) {
+        let zombiefast = fastzombies[i];      
+        for (let j = bullets.length - 1; j >= 0; j--) {
+            let bullet = bullets[j];
+            if (distance(bullet.obj, zombiefast.obj) < 3) { 
+                console.log("Fast Zombie hit! Calling takeDamage() function");
+                zombiefast.takeDamage(10); // Pass the damage value
+                bullets.splice(j, 1);
+                if (bullet.obj.parentNode) {
+                    bullet.obj.parentNode.removeChild(bullet.obj);
+                }
+                break; 
+            }
+        }
+    }
+    for (let i = animatronics.length - 1; i >= 0; i--) {
+        let zombie = animatronics[i];   
+        for (let j = bullets.length - 1; j >= 0; j--) {
+            let bullet = bullets[j];
+            if (distance(bullet.obj, zombie.obj) < 5) { 
+                console.log("Zombie hit! Calling takeDamage() function");
+                zombie.takeDamage(10);
+                if (zombie.health <= 0) {
+                    animatronics.splice(i, 1);
+                }
+                if (bullet.obj.parentNode) {
+                    bullet.obj.parentNode.removeChild(bullet.obj);
+                }
+                break; 
+            }
+        }
+    }
+    
+    for(let ammo of ammos){
+        ammo.spin();
+        if (distance(camera, ammo.obj) < 3 && ammo.available) {
+            ammo.collect();
+            q3.setAttribute("value", `Quest #3: ${ammo_collected} / 20 ammo collected`);
+        }
+    }
+    for(let food of foods){
+        food.spin();
+        if (distance(camera, food.obj) < 3 && food.available) {
+            food.collect();
+            q1.setAttribute("value", `Quest #1: ${food_collected} / 25 food collected`);
+        }
+    }
+    for(let heal of heals){
+        heal.spin();
+        if (distance(camera, heal.obj) < 3 && heal.available) {
+            heal.collect();
+            q4.setAttribute("value", `Quest #4: ${health_collected} / 5 health collected`);
+        }
+    }
+    for(let water of waters){
+        water.spin();
+        if (distance(camera, water.obj) < 3 && water.available) {
+            water.collect();
+            q2.setAttribute("value", `Quest #2: ${water_collected} / 25 water collected`);
+        }
+    }
+
+    checkZombieCollisions(); // Check for collisions with zombies
+
+    requestAnimationFrame(loop); // Ensure continuous checking
+}
