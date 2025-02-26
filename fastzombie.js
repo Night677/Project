@@ -7,9 +7,9 @@ class FastZombie {
        
         document.querySelector('a-scene').appendChild(this.obj);
 
-        // Initialize the angle and speed
+       
         this.angle = 0;
-        this.damage = 10; // Define damage as a property of the class
+        this.damage = 10; 
         this.health = 20;
         this.model = {
             die: "run",
@@ -19,20 +19,20 @@ class FastZombie {
             attack: "attack2"
         };
 
-        // Bind the chase method to the current instance
+        
         this.chase = this.chase.bind(this);
 
-        // Initialize the last attack time
+       
         this.lastAttackTime = 0;
-        this.attackCooldown = 2000; // 2 seconds cooldown between attacks
+        this.attackCooldown = 2000; 
 
-        // Initialize health
+        
         this.health = 20;
 
-        // Listen for the model to load
+        
         this.obj.addEventListener('model-loaded', () => {
-            // Call the chase method at regular intervals to make the zombie chase the camera
-            this.chaseInterval = setInterval(this.chase, 100); // Adjust the interval as needed
+            
+            this.chaseInterval = setInterval(this.chase, 100); 
         });
     }
 
@@ -40,8 +40,8 @@ class FastZombie {
         let dx = that.object3D.position.x - this.obj.object3D.position.x;
         let dz = that.object3D.position.z - this.obj.object3D.position.z;
 
-        this.angle = Math.atan2(dx, dz); // Use atan2 for correct angle calculation
-        this.obj.object3D.rotation.y = this.angle; // Update the zombie's rotation
+        this.angle = Math.atan2(dx, dz); 
+        this.obj.object3D.rotation.y = this.angle; 
     }
 
     forward() {
@@ -50,7 +50,7 @@ class FastZombie {
         this.obj.object3D.position.x += dx;
         this.obj.object3D.position.z += dz;
 
-        // Sync the new position with the A-Frame position attribute
+        
         const pos = this.obj.object3D.position;
         this.obj.setAttribute("position", `${pos.x} ${pos.y} ${pos.z}`);
 
@@ -58,7 +58,7 @@ class FastZombie {
     }
 
     stop() {
-        // Stop the zombie's movement
+      
         this.obj.setAttribute("animation-mixer", { clip: this.model.idle, timeScale: 1 });
     }
 
@@ -66,10 +66,9 @@ class FastZombie {
         const currentTime = Date.now();
         if (currentTime - this.lastAttackTime > this.attackCooldown) {
             console.log("Zombie is attacking!");
-            // Implement the logic to reduce the camera's health
-            // Ensure the camera's health is only reduced if the zombie is visible and alive
+          
             if (this.obj.getAttribute("visible") !== "false" && this.health > 0) {
-                // Reduce camera health
+               
                 console.log("Camera health reduced!");
                 this.obj.setAttribute("animation-mixer", { clip: this.model.attack, timeScale: 1 });
             }
@@ -106,7 +105,7 @@ class FastZombie {
 
     die() {
         console.log("Zombie has died!");
-        clearInterval(this.chaseInterval); // Stop the chase interval
+        clearInterval(this.chaseInterval); 
 
         this.model = {
             die: "run",
@@ -116,7 +115,7 @@ class FastZombie {
             attack: "attack2" 
         };
 
-        // Remove the zombie from the scene after the death animation
+        
         setTimeout(() => {
             this.obj.setAttribute("visible", "false");
 
@@ -124,9 +123,9 @@ class FastZombie {
                 if (this.obj.parentNode) {
                     this.obj.parentNode.removeChild(this.obj);
                 }
-            }, 500); // Additional delay to ensure visibility change
+            }, 500); 
 
-        }, 1000); // Adjust the timeout to match the length of the death animation
+        }, 1000);
     }
 }
 
