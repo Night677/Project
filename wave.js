@@ -1,84 +1,66 @@
 let rnd = (l, u) => Math.random() * (u - l) + l;
 let camera, cursor, gun, player;
 let bosss = [], animatronics = [], bullets = [], fastzombies = [], foods = [], heals = [], ammos = [], waters = [], trees = [], rocks = [];
-let isShooting = false, isWalking = false, isReloading = false, isJumping = false, isSprinting = false;
+let isShooting = false, isWalking = false, isReloading = false, isJumping = false, isSprinting = false, rintStartTime = null, sprintcdst = null, canSprint = true;
 let health = 115, score = 0, bullet = 30, wave = 0, maxWave = 30, maxHealth = 115, maxAmmo = 30;
-let food_collected = 0, ammo_collected = 0, health_collected = 0, water_collected = 0;
-const walkKeys = new Set(['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
-const sprintKey = 'Shift';
-const jumpKey = ' ';
-
-const sprintDuration = 5000; // 5 seconds
-const sprintCooldown = 5000; // 5 seconds cooldown
-let sprintStartTime = null;
-let sprintCooldownStartTime = null;
-let canSprint = true;
-
-let zombiesPerWave = 0;
-let lastHealthReductionTime = 0;
-const healthReductionCooldown = 1000; // Cooldown period in milliseconds
+let food_collected = 0, ammo_collected = 0, health_collected = 0, water_collected = 0, sprintDuration = 5000,sprintCooldown = 5000, zomberpw = 0, lastHealthReductionTime = 0;
+const walkKeys = new Set(['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']),  jumpKey = ' ', sprintKey = 'Shift';
+const healthReductionCooldown = 1000;
 
 window.onload = function () {
     scene = document.querySelector("a-scene");
     camera = document.querySelector("a-camera");
     cursor = document.querySelector("a-cursor");
-    gun = document.querySelector("#gun1");
-  
-    player = document.querySelector("#player");
+    gun = document.getElementById("#gun1");
+    player = document.getElementById("#player");
     loop();
-    console.log("Camera initial position:", camera.object3D.position);
 
     window.addEventListener("keydown", function (e) {
-        if (walkKeys.has(e.key) && !isWalking && !isReloading) {
+            if (walkKeys.has(e.key) && !isWalking && !isReloading) {
             isWalking = true;
             updateAnimation();
-        } else if (e.key === 'r' && !isReloading) {
+        } else if (e.key == 'r' && !isReloading) {
             isReloading = true;
-            bullet = maxAmmo; // Refill ammo instantly
+            bullet = maxAmmo;
             updateAnimation();
             setTimeout(() => {
-                console.log("Reloading animation finished, Ammo left:", bullet);
-                isReloading = false;
-                updateAnimation();
-            }, 2000); 
-        } else if (e.key === sprintKey && walkKeys.has('w') && !isSprinting && canSprint) {
+            isReloading = false;
+            updateAnimation();
+        }, 2000); 
+        } else if (e.key == sprintKey && walkKeys.has('w') && !isSprinting && canSprint) {
             isSprinting = true;
-            sprintStartTime = Date.now();
+// the date is alot more better the doing timer ++ 1 because it's not to exact
+            sst = Date.now();
             updateAnimation();
             camera.setAttribute('wasd-controls', 'acceleration: 50');
         } else if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-            loseGame();
+        loseGame();
         }
     });
 
-    // Handle keyup events
     window.addEventListener("keyup", function (e) {
         if (walkKeys.has(e.key)) {
             isWalking = false;
             updateAnimation();
-        } else if (e.key === sprintKey) {
+        } else if (e.key == sprintKey) {
             isSprinting = false;
             updateAnimation();
             camera.setAttribute('wasd-controls', 'acceleration: 25');
         }
     });
 
-    // Handle mouse down (shooting)
     window.addEventListener('mousedown', function (e) {
-        if (e.button === 0 && bullet > 0 && !isReloading) { // Left mouse button and has ammo and not reloading
+        if (e.button == 0 && bullet > 0 && !isReloading) { 
             isShooting = true;
             updateAnimation();
-            console.log("Shooting animation triggered");
             let newBullet = new Bullet();
             newBullet.shoot();
-            bullet--; // Decrease bullet count
-            updateWaveInfo(); // Update bullet count
+            bullet--;
+            UpWaveinfo();
         }
     });
-
-    // Handle mouse up (stop shooting)
     window.addEventListener('mouseup', function (e) {
-        if (e.button === 0) { // Left mouse button
+        if (e.button === 0) { 
             isShooting = false;
             updateAnimation();
             console.log("Stopped shooting");
@@ -88,14 +70,12 @@ window.onload = function () {
 
 window.reduceHealth = function(amount) {
     health -= amount;
-    console.log(`Health reduced by ${amount}. Current health: ${health}`);
     if (health <= 0) {
-        console.log("Player is dead");
         loseGame();
     }
-    updateWaveInfo(); // Update health info
+    UpWaveinfo(); 
 };
-
+// This part is pain because it what use for the gun animation 
 function updateAnimation() {
     if (isReloading) {
         gun.setAttribute('animation-mixer', "clip: Armature.003|reload; loop: once; timeScale: 1");
@@ -103,10 +83,10 @@ function updateAnimation() {
         gun.setAttribute('animation-mixer', "clip: Armature.003|shooting; loop: once; timeScale: 2");
     } else if (isWalking) {
         if (isSprinting) {
-            gun.setAttribute('animation-mixer', "clip: Armature.003|run cycle; loop: repeat; timeScale: 3");
-        } else {
-            gun.setAttribute('animation-mixer', "clip: Armature.003|walk; loop: repeat; timeScale: 2");
-        }
+        gun.setAttribute('animation-mixer', "clip: Armature.003|run cycle; loop: repeat; timeScale: 3");
+    } else {
+        gun.setAttribute('animation-mixer', "clip: Armature.003|walk; loop: repeat; timeScale: 2");
+    }
     } else {
         gun.setAttribute('animation-mixer', "clip: Armature.003|idle; loop: repeat; timeScale: 1");
     }
@@ -114,20 +94,22 @@ function updateAnimation() {
 
 function startWave() {
     console.log(`Starting wave ${wave}`);
-    for (let i = 0; i < zombiesPerWave; i++) {
+    for (let i = 0; i < zomberpw; i++) {
         let x = rnd(-20, 20);
         let z = rnd(-250, 250);
         let animatronic = new Animatronic(x, 0.1, z);
+//I did little research and use interval to change the animation of the zombie 
         animatronic.intervalId = setInterval(() => {
             animatronic.chase();
         }, 100);
         animatronics.push(animatronic);
     }
 
-    for (let i = 0; i < zombiesPerWave; i++) {
+    for (let i = 0; i < zomberpw; i++) {
         let x = rnd(-20, 20);
         let z = rnd(-250, 250);
         let fastzombie = new FastZombie(x, 0.1, z);
+//I did little research and use interval to change the animation of the zombie 
         fastzombie.intervalId = setInterval(() => {
             fastzombie.chase();
         }, 100);
@@ -136,20 +118,17 @@ function startWave() {
 }
 
 function checkWaveCompletion() {
-    console.log(`Checking wave completion: animatronics.length=${animatronics.length}, fastzombies.length=${fastzombies.length}`);
     if (animatronics.length === 0 && fastzombies.length === 0) {
         if (wave < maxWave) {
             wave++;
-            zombiesPerWave += 5; // Increase the number of zombies per wave
-            console.log(`Wave ${wave} starting with ${zombiesPerWave} zombies`);
+            zomberpw += 5;
             startWave();
-        } else {
-            console.log("All waves completed!");
-        }
+        } 
     }
 }
 
-function updateWaveInfo() {
+function UpWaveinfo() {
+//using <p> looks more cleaner then using <a-text>
     const waveInfo = document.getElementById('wave-info');
     waveInfo.innerHTML = `Wave: ${wave}<br>Zombies: ${animatronics.length + fastzombies.length}`;
     
@@ -160,22 +139,22 @@ function updateWaveInfo() {
 function loop() {
     for (let i = fastzombies.length - 1; i >= 0; i--) {
         let zombiefast = fastzombies[i];
-        if (zombiefast.pendingRemoval) continue; // Skip zombies pending removal
+        if (zombiefast.pendingRemoval) continue; 
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombiefast.obj) < 3) {
-                console.log("Fast Zombie hit! Calling takeDamage() function");
-                zombiefast.takeDamage(10); // Pass the damage value
+                
+                zombiefast.takeDamage(10); 
                 bullets.splice(j, 1);
                 bullet.obj.parentNode.removeChild(bullet.obj);
                 if (zombiefast.health <= 0) {
-                    zombiefast.isDead = true; // Set the flag to indicate the zombie is dead
-                    zombiefast.die(); // Play dying animation
-                    zombiefast.pendingRemoval = true; // Mark for removal
+                    zombiefast.isDead = true; 
+                    zombiefast.die(); 
+                    zombiefast.pendingRemoval = true; 
                     setTimeout(() => {
-                        fastzombies.splice(fastzombies.indexOf(zombiefast), 1); // Remove zombie after animation
-                        updateWaveInfo(); // Update wave info after removal
-                    }, 1000); // Adjust the timeout to match the animation duration
+                        fastzombies.splice(fastzombies.indexOf(zombiefast), 1); 
+                        UpWaveinfo(); 
+                    }, 1000); 
                 }
                 break;
             }
@@ -184,52 +163,49 @@ function loop() {
 
     for (let i = animatronics.length - 1; i >= 0; i--) {
         let zombie = animatronics[i];
-        if (zombie.pendingRemoval) continue; // Skip zombies pending removal
+        if (zombie.pendingRemoval) continue; 
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombie.obj) < 3) {
-                console.log("Zombie hit! Calling takeDamage() function");
-                zombie.takeDamage(10); // Pass the damage value
+                zombie.takeDamage(10);
                 bullets.splice(j, 1);
                 bullet.obj.parentNode.removeChild(bullet.obj);
                 if (zombie.health <= 0) {
-                    zombie.isDead = true; // Set the flag to indicate the zombie is dead
-                    zombie.die(); // Play dying animation
-                    zombie.pendingRemoval = true; // Mark for removal
+                    zombie.isDead = true; 
+                    zombie.die();
+                    zombie.pendingRemoval = true; 
                     setTimeout(() => {
-                        animatronics.splice(animatronics.indexOf(zombie), 1); // Remove zombie after animation
-                        updateWaveInfo(); // Update wave info after removal
-                    }, 1000); // Adjust the timeout to match the animation duration
+                        animatronics.splice(animatronics.indexOf(zombie), 1);
+                        UpWaveinfo(); 
+                    }, 1000);
                 }
                 break;
             }
         }
     }
 
-    checkZombiePlayerCollision(); // Check for collisions between zombies and the player
+    checkZombiePlayerCollision();
     checkWaveCompletion();
-    updateWaveInfo(); // Update wave info continuously
+    UpWaveinfo();
 
-    // Check sprint duration
-    if (isSprinting && Date.now() - sprintStartTime >= sprintDuration) {
+    if (isSprinting && Date.now() - sst >= sprintDuration) {
         isSprinting = false;
         canSprint = false;
-        sprintCooldownStartTime = Date.now();
+        sprintcdst = Date.now();
         camera.setAttribute('wasd-controls', 'acceleration: 25');
     }
 
-    // Check sprint cooldown
-    if (!canSprint && Date.now() - sprintCooldownStartTime >= sprintCooldown) {
+    if (!canSprint && Date.now() - sprintcdst >= sprintCooldown) {
         canSprint = true;
     }
 
-    requestAnimationFrame(loop); // Ensure continuous checking
+    requestAnimationFrame(loop); 
 }
 
 function checkZombiePlayerCollision() {
     const currentTime = Date.now();
     if (currentTime - lastHealthReductionTime < healthReductionCooldown) {
-        return; // Skip health reduction if cooldown period has not passed
+        return; 
     }
 
     let healthReduced = false;
@@ -237,8 +213,7 @@ function checkZombiePlayerCollision() {
     for (let i = fastzombies.length - 1; i >= 0; i--) {
         let zombiefast = fastzombies[i];
         if (distance(zombiefast.obj, camera) < 3) {
-            console.log("Fast Zombie collided with player! Reducing health");
-            reduceHealth(2); // Reduce player's health by 2 for fast zombies
+            reduceHealth(2); 
             healthReduced = true;
             break;
         }
@@ -247,15 +222,15 @@ function checkZombiePlayerCollision() {
     for (let i = animatronics.length - 1; i >= 0; i--) {
         let zombie = animatronics[i];
         if (distance(zombie.obj, camera) < 3) {
-            console.log("Zombie collided with player! Reducing health");
-            reduceHealth(3); // Reduce player's health by 3 for normal zombies
+            reduceHealth(3); 
             healthReduced = true;
             break;
         }
     }
 
     if (healthReduced) {
-        lastHealthReductionTime = currentTime; // Update the last health reduction time
+        lastHealthReductionTime = currentTime; 
+        
     }
 }
 
