@@ -10,10 +10,10 @@ const walkKeys = new Set(['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft
 const sprintKey = 'Shift';
 const jumpKey = ' ';
 let lastDamageTime = 0;
-const damageCooldown = 2000; // 2 seconds cooldown between damage instances
+const damageCooldown = 2000; 
 
-const sprintDuration = 5000; // 5 seconds
-const sprintCooldown = 5000; // 5 seconds cooldown
+const sprintDuration = 5000; 
+const sprintCooldown = 5000; 
 let sprintStartTime = null;
 let sprintCooldownStartTime = null;
 let canSprint = true;
@@ -29,7 +29,7 @@ window.onload = function () {
     scene = document.querySelector("a-scene");
     camera = document.querySelector("a-camera");
     cursor = document.querySelector("a-cursor");
-    gun = document.querySelector("#gun1");
+    gun = document.getElementById("#gun1");
     q1 = document.getElementById("Quest1");
     q2 = document.getElementById("Quest2");
     q3 = document.getElementById("Quest3");
@@ -42,7 +42,6 @@ window.onload = function () {
     q4.setAttribute("value", `Quest #4: ${health_collected} / ${questTargets.health} health collected`);
     healthElement.setAttribute('value', `Health: ${player_health}`);
     player = document.querySelector("#player");
-    console.log("Camera initial position:", camera.object3D.position);
 
     setInterval(() => {
         for (let i = 0; i < rnd(4,6); i++) {
@@ -111,17 +110,17 @@ window.onload = function () {
             console.log("Shooting animation triggered");
             let newBullet = new Bullet();
             newBullet.shoot();
-            bullet--; // Decrement the bullet count
-            console.log(`Bullets left: ${bullet}`);
-            updatePlayerInfo(); // Update bullet count
+            bullet--;
+            
+            updatePlayerInfo(); 
         }
     });
 
     window.addEventListener('mouseup', function (e) {
-        if (e.button === 0) { // Left mouse button
+        if (e.button === 0) { 
             isShooting = false;
             updateAnimation();
-            console.log("Stopped shooting");
+
         }
     });
 
@@ -183,7 +182,7 @@ window.onload = function () {
 
     setTimeout(loop, 500);
 
-    // Add cheat code listener
+
     window.addEventListener('keydown', function (e) {
         if (e.ctrlKey && e.shiftKey && e.key === 'A') {
             completeAllQuests();
@@ -196,21 +195,16 @@ window.onload = function () {
 function updateAnimation() {
     if (isReloading) {
         gun.setAttribute('animation-mixer', "clip: Armature.003|reload; loop: once; timeScale: 1");
-        console.log("Reloading animation set");
     } else if (isShooting) {
         gun.setAttribute('animation-mixer', "clip: Armature.003|shooting; loop: once; timeScale: 2");
-        console.log("Shooting animation set");
     } else if (isWalking) {
         if (isSprinting) {
             gun.setAttribute('animation-mixer', "clip: Armature.003|run cycle; loop: repeat; timeScale: 3");
-            console.log("Sprinting animation set");
         } else {
             gun.setAttribute('animation-mixer', "clip: Armature.003|walk; loop: repeat; timeScale: 1");
-            console.log("Walking animation set");
         }
     } else {
         gun.setAttribute('animation-mixer', "clip: Armature.003|idle; loop: repeat; timeScale: 1");
-        console.log("Idle animation set");
     }
 }
 
@@ -220,7 +214,6 @@ function takePlayerDamage(damage) {
         player_health -= damage;
         if (player_health < 0) player_health = 0;
         lastDamageTime = currentTime;
-        console.log(`Player took ${damage} damage. Current health: ${player_health}`);
         healthElement.setAttribute('value', `Health: ${player_health}`);
         if (player_health <= 0) {
             loseGame();
@@ -287,14 +280,12 @@ function completeAllQuests() {
     checkQuestCompletion();
 }
 
-// Modify the loop function to include player damage
 function loop() {
     for (let i = fastzombies.length - 1; i >= 0; i--) {
         let zombiefast = fastzombies[i];      
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombiefast.obj) < 3) { 
-                console.log("Fast Zombie hit! Calling takeDamage() function");
                 zombiefast.takeDamage(10); // Pass the damage value
                 bullets.splice(j, 1);
                 if (bullet.obj.parentNode) {
@@ -308,7 +299,7 @@ function loop() {
             }
         }
         if (distance(camera, zombiefast.obj) < 3) {
-            takePlayerDamage(5); // Fast zombie does 5 damage
+            takePlayerDamage(5); 
         }
     }
     for (let i = animatronics.length - 1; i >= 0; i--) {
@@ -316,7 +307,6 @@ function loop() {
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombie.obj) < 5) { 
-                console.log("Zombie hit! Calling takeDamage() function");
                 zombie.takeDamage(10);
                 if (zombie.health <= 0) {
                     animatronics.splice(i, 1);
