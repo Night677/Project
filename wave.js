@@ -4,29 +4,24 @@ let bosss = [], animatronics = [], bullets = [], fastzombies = [], foods = [], h
 let isShooting = false, isWalking = false, isReloading = false, isJumping = false, isSprinting = false;
 let health = 115, score = 0, bullet = 30, wave = 0, maxWave = 30, maxHealth = 115, maxAmmo = 30;
 let food_collected = 0, ammo_collected = 0, health_collected = 0, water_collected = 0;
-const walkKeys = new Set(['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']);
-const sprintKey = 'Shift';
-const jumpKey = ' ';
+const walkKeys = new Set(['w', 'a', 's', 'd', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']), jumpKey = ' ', sprintKey = 'Shift';
+const sprintDuration = 5000, sprintCooldown = 5000;
 
-const sprintDuration = 5000; // 5 seconds
-const sprintCooldown = 5000; // 5 seconds cooldown
 let sprintStartTime = null;
 let sprintCooldownStartTime = null;
 let canSprint = true;
 
 let zombiesPerWave = 0;
 let lastHealthReductionTime = 0;
-const healthReductionCooldown = 1000; // Cooldown period in milliseconds
+const healthReductionCooldown = 1000; 
 
 window.onload = function () {
     scene = document.querySelector("a-scene");
     camera = document.querySelector("a-camera");
     cursor = document.querySelector("a-cursor");
-    gun = document.querySelector("#gun1");
-  
-    player = document.querySelector("#player");
+    gun = document.getElementById("#gun1");
+    player = document.getElementById("#player");
     loop();
-    console.log("Camera initial position:", camera.object3D.position);
 
     window.addEventListener("keydown", function (e) {
         if (walkKeys.has(e.key) && !isWalking && !isReloading) {
@@ -34,14 +29,13 @@ window.onload = function () {
             updateAnimation();
         } else if (e.key === 'r' && !isReloading) {
             isReloading = true;
-            bullet = maxAmmo; // Refill ammo instantly
+            bullet = maxAmmo; 
             updateAnimation();
             setTimeout(() => {
-                console.log("Reloading animation finished, Ammo left:", bullet);
-                isReloading = false;
-                updateAnimation();
+             isReloading = false;
+             updateAnimation();
             }, 2000); 
-        } else if (e.key === sprintKey && walkKeys.has('w') && !isSprinting && canSprint) {
+        } else if (e.key === sprintKey && !isSprinting && canSprint) {
             isSprinting = true;
             sprintStartTime = Date.now();
             updateAnimation();
@@ -51,7 +45,6 @@ window.onload = function () {
         }
     });
 
-    // Handle keyup events
     window.addEventListener("keyup", function (e) {
         if (walkKeys.has(e.key)) {
             isWalking = false;
@@ -63,37 +56,31 @@ window.onload = function () {
         }
     });
 
-    // Handle mouse down (shooting)
     window.addEventListener('mousedown', function (e) {
-        if (e.button === 0 && bullet > 0 && !isReloading) { // Left mouse button and has ammo and not reloading
+        if (e.button === 0 && bullet > 0 && !isReloading) {
             isShooting = true;
             updateAnimation();
-            console.log("Shooting animation triggered");
             let newBullet = new Bullet();
             newBullet.shoot();
-            bullet--; // Decrease bullet count
-            updateWaveInfo(); // Update bullet count
+            bullet--; 
+            updateWaveInfo();
         }
     });
 
-    // Handle mouse up (stop shooting)
     window.addEventListener('mouseup', function (e) {
-        if (e.button === 0) { // Left mouse button
+        if (e.button === 0) {
             isShooting = false;
             updateAnimation();
-            console.log("Stopped shooting");
         }
     });
 };
 
 window.reduceHealth = function(amount) {
     health -= amount;
-    console.log(`Health reduced by ${amount}. Current health: ${health}`);
     if (health <= 0) {
-        console.log("Player is dead");
         loseGame();
     }
-    updateWaveInfo(); // Update health info
+    updateWaveInfo();
 };
 
 function updateAnimation() {
@@ -102,7 +89,7 @@ function updateAnimation() {
     } else if (isShooting) {
         gun.setAttribute('animation-mixer', "clip: Armature.003|shooting; loop: once; timeScale: 2");
     } else if (isWalking) {
-        if (isSprinting) {
+         if (isSprinting) {
             gun.setAttribute('animation-mixer', "clip: Armature.003|run cycle; loop: repeat; timeScale: 3");
         } else {
             gun.setAttribute('animation-mixer', "clip: Armature.003|walk; loop: repeat; timeScale: 2");
@@ -113,12 +100,11 @@ function updateAnimation() {
 }
 
 function startWave() {
-    console.log(`Starting wave ${wave}`);
     for (let i = 0; i < zombiesPerWave; i++) {
         let x = rnd(-20, 20);
         let z = rnd(-250, 250);
         let animatronic = new Animatronic(x, 0.1, z);
-        animatronic.intervalId = setInterval(() => {
+        animatronic = setInterval(() => {
             animatronic.chase();
         }, 100);
         animatronics.push(animatronic);
@@ -128,7 +114,7 @@ function startWave() {
         let x = rnd(-20, 20);
         let z = rnd(-250, 250);
         let fastzombie = new FastZombie(x, 0.1, z);
-        fastzombie.intervalId = setInterval(() => {
+        fastzombie = setInterval(() => {
             fastzombie.chase();
         }, 100);
         fastzombies.push(fastzombie);
@@ -136,16 +122,12 @@ function startWave() {
 }
 
 function checkWaveCompletion() {
-    console.log(`Checking wave completion: animatronics.length=${animatronics.length}, fastzombies.length=${fastzombies.length}`);
     if (animatronics.length === 0 && fastzombies.length === 0) {
         if (wave < maxWave) {
             wave++;
-            zombiesPerWave += 5; // Increase the number of zombies per wave
-            console.log(`Wave ${wave} starting with ${zombiesPerWave} zombies`);
+            zombiesPerWave += 5;
             startWave();
-        } else {
-            console.log("All waves completed!");
-        }
+        } 
     }
 }
 
@@ -160,57 +142,38 @@ function updateWaveInfo() {
 function loop() {
     for (let i = fastzombies.length - 1; i >= 0; i--) {
         let zombiefast = fastzombies[i];
-        if (zombiefast.pendingRemoval) continue; // Skip zombies pending removal
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombiefast.obj) < 3) {
-                console.log("Fast Zombie hit! Calling takeDamage() function");
-                zombiefast.takeDamage(10); // Pass the damage value
-                bullets.splice(j, 1);
+                zombiefast.takeDamage(10);
                 bullet.obj.parentNode.removeChild(bullet.obj);
                 if (zombiefast.health <= 0) {
-                    zombiefast.isDead = true; // Set the flag to indicate the zombie is dead
-                    zombiefast.die(); // Play dying animation
-                    zombiefast.pendingRemoval = true; // Mark for removal
-                    setTimeout(() => {
-                        fastzombies.splice(fastzombies.indexOf(zombiefast), 1); // Remove zombie after animation
-                        updateWaveInfo(); // Update wave info after removal
-                    }, 1000); // Adjust the timeout to match the animation duration
+                    zombiefast.isDead = true;
+                    zombiefast.die(); 
                 }
-                break;
             }
         }
     }
 
     for (let i = animatronics.length - 1; i >= 0; i--) {
         let zombie = animatronics[i];
-        if (zombie.pendingRemoval) continue; // Skip zombies pending removal
         for (let j = bullets.length - 1; j >= 0; j--) {
             let bullet = bullets[j];
             if (distance(bullet.obj, zombie.obj) < 3) {
-                console.log("Zombie hit! Calling takeDamage() function");
-                zombie.takeDamage(10); // Pass the damage value
-                bullets.splice(j, 1);
-                bullet.obj.parentNode.removeChild(bullet.obj);
+                zombie.takeDamage(10);
                 if (zombie.health <= 0) {
-                    zombie.isDead = true; // Set the flag to indicate the zombie is dead
-                    zombie.die(); // Play dying animation
-                    zombie.pendingRemoval = true; // Mark for removal
-                    setTimeout(() => {
-                        animatronics.splice(animatronics.indexOf(zombie), 1); // Remove zombie after animation
-                        updateWaveInfo(); // Update wave info after removal
-                    }, 1000); // Adjust the timeout to match the animation duration
+                    zombie.isDead = true;
+                    zombie.die(); 
+                   
                 }
-                break;
             }
         }
     }
 
-    checkZombiePlayerCollision(); // Check for collisions between zombies and the player
+    checkZombiePlayerCollision(); 
     checkWaveCompletion();
-    updateWaveInfo(); // Update wave info continuously
+    updateWaveInfo(); 
 
-    // Check sprint duration
     if (isSprinting && Date.now() - sprintStartTime >= sprintDuration) {
         isSprinting = false;
         canSprint = false;
@@ -218,18 +181,17 @@ function loop() {
         camera.setAttribute('wasd-controls', 'acceleration: 25');
     }
 
-    // Check sprint cooldown
     if (!canSprint && Date.now() - sprintCooldownStartTime >= sprintCooldown) {
         canSprint = true;
     }
 
-    requestAnimationFrame(loop); // Ensure continuous checking
+    requestAnimationFrame(loop);
 }
 
 function checkZombiePlayerCollision() {
     const currentTime = Date.now();
     if (currentTime - lastHealthReductionTime < healthReductionCooldown) {
-        return; // Skip health reduction if cooldown period has not passed
+        return; 
     }
 
     let healthReduced = false;
@@ -237,26 +199,21 @@ function checkZombiePlayerCollision() {
     for (let i = fastzombies.length - 1; i >= 0; i--) {
         let zombiefast = fastzombies[i];
         if (distance(zombiefast.obj, camera) < 3) {
-            console.log("Fast Zombie collided with player! Reducing health");
-            reduceHealth(2); // Reduce player's health by 2 for fast zombies
+            reduceHealth(2); 
             healthReduced = true;
-            break;
         }
     }
 
     for (let i = animatronics.length - 1; i >= 0; i--) {
         let zombie = animatronics[i];
         if (distance(zombie.obj, camera) < 3) {
-            console.log("Zombie collided with player! Reducing health");
-            reduceHealth(3); // Reduce player's health by 3 for normal zombies
+            reduceHealth(3);
             healthReduced = true;
-            break;
         }
     }
 
     if (healthReduced) {
-        lastHealthReductionTime = currentTime; // Update the last health reduction time
-    }
+        lastHealthReductionTime = currentTime;
 }
 
 function distance(obj1, obj2) {
