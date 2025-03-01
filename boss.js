@@ -11,3 +11,4 @@ class Bosszombie{
       scene.append(this.obj);
     }
 }
+//No time :( 
